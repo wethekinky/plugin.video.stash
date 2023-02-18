@@ -27,7 +27,7 @@ class TagItem(NavigationItem):
                     'modifier': 'INCLUDES_ALL', 'value': [tag['id']]
                 }
             }
-            description = f"{tag['description']}"
+            description = tag['description'] if tag['description'] is not None else ""
             parent_tags = ", ".join([t['name'] for t in tag['parents']])
             if parent_tags:
                 description += f'\nParents: {parent_tags}'
