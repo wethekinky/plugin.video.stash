@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional, Tuple
 import xbmcgui
 
 from .listing import Listing
@@ -9,9 +9,10 @@ from resources.lib.navigation import NavigationItem, StudioItem, TagItem, Perfor
 
 class SceneListing(Listing):
     def __init__(self, client: StashInterface):
-        Listing.__init__(self, client, 'scenes', local.get_localized(30006), filter_type='SCENES')
+        Listing.__init__(self, client, 'scenes',
+                         local.get_localized(30006), filter_type='SCENES')
 
-    def get_navigation(self) -> [NavigationItem]:
+    def get_navigation(self) -> List[NavigationItem]:
         return [
             PerformerItem(self._client, 'scenes'),
             TagItem(self._client, 'scenes'),
@@ -27,8 +28,9 @@ class SceneListing(Listing):
         if browse == 'studios':
             return StudioItem(self._client, 'scenes')
 
-    def _create_items(self, criterion: dict, sort_field: str, sort_dir: str, params: dict):
-        (count, scenes) = self._client.find_scenes(criterion, sort_field, sort_dir)
+    def _create_items(self, criterion: dict, sort_field: str, sort_dir: str, params: dict) -> List[Tuple[xbmcgui.ListItem, str]]:
+        (_, scenes) = self._client.find_scenes(
+            criterion, sort_field, sort_dir)
         items = []
         for scene in scenes:
             item = self._create_item(scene)

@@ -5,7 +5,7 @@ import urllib.parse
 class StashInterface:
     def __init__(self, url, api_key):
         if not url.endswith('/graphql'):
-            url = "{0}/graphql".format(url.rstrip("/"))
+            url = f'{url.rstrip("/")}/graphql'
 
         self._headers = {
             "Accept-Encoding": "gzip, deflate, br",
@@ -17,9 +17,10 @@ class StashInterface:
         self._url = url
         self._api_key = api_key
 
-    def add_api_key(self, url: str):
+    def add_api_key(self, url: str) -> str:
         if self._api_key:
-            url = "{}{}apikey={}".format(url, '&' if '?' in url else '?', urllib.parse.quote(self._api_key))
+            url = "{}{}apikey={}".format(
+                url, '&' if '?' in url else '?', urllib.parse.quote(self._api_key))
 
         return url
 
@@ -34,7 +35,8 @@ class StashInterface:
             result = response.json()
             if result.get("errors", None):
                 for error in result["errors"]:
-                    raise Exception("GraphQL error: {}".format(error['message']))
+                    raise Exception(
+                        "GraphQL error: {}".format(error['message']))
             if result.get("data", None):
                 return result.get("data")
         else:
@@ -69,6 +71,7 @@ query findScenes($scene_filter: SceneFilterType, $filter: FindFilterType!) {
       }
       performers {
         name
+        image_path
       }
       tags {
         name
@@ -81,11 +84,12 @@ query findScenes($scene_filter: SceneFilterType, $filter: FindFilterType!) {
 }
 """
 
-        variables = {'filter': {
-            'per_page': -1,
-            'sort': sort_field if sort_field is not None else 'title',
-            'direction': 'DESC' if sort_dir.lower() == 'desc' else 'ASC'
-        }}
+        variables = {
+            'filter': {
+                'per_page': -1,
+                'sort': sort_field if sort_field is not None else 'title',
+                'direction': 'DESC' if sort_dir.lower() == 'desc' else 'ASC'
+            }}
 
         if scene_filter is not None:
             variables['scene_filter'] = scene_filter
@@ -120,6 +124,7 @@ query findScene($id: ID) {
     }
     performers {
       name
+      image_path
     }
     tags {
       name
@@ -151,6 +156,7 @@ query findScene($id: ID) {
         }
         performers {
           name
+          image_path
         }
         tags {
           name
@@ -181,17 +187,22 @@ query findPerformers($performer_filter: PerformerFilterType, $filter: FindFilter
     performers {
       id
       name
+      aliases
       details
+      gender
+      favorite
+      scene_count
       image_path
     }
   }
 }
 """
 
-        variables = {'filter': {
-            'per_page': -1,
-            'sort': 'name'
-        },
+        variables = {
+            'filter': {
+                'per_page': -1,
+                'sort': 'name'
+            },
             'performer_filter': {
                 'scene_count': {
                     'modifier': 'GREATER_THAN',
@@ -212,26 +223,28 @@ query findTags($tag_filter: TagFilterType, $filter: FindFilterType!) {
     tags {
       id
       name
+      description
       image_path
     }
   }
 }
 """
 
-        filter = {}
+        _filter = {}
         if 'has_type' in kwargs:
             count_type = 'marker_count' if kwargs['has_type'] == 'scene_markers' else 'scene_count'
 
-            filter[count_type] = {
+            _filter[count_type] = {
                 'modifier': 'GREATER_THAN',
                 'value': 0,
             }
 
-        variables = {'filter': {
-            'per_page': -1,
-            'sort': 'name'
-        },
-            'tag_filter': filter
+        variables = {
+            'filter': {
+                'per_page': -1,
+                'sort': 'name'
+            },
+            'tag_filter': _filter
         }
 
         result = self.__call_graphql(query, variables)
@@ -253,10 +266,11 @@ query findStudios($studio_filter: StudioFilterType, $filter: FindFilterType!) {
 }
 """
 
-        variables = {'filter': {
-            'per_page': -1,
-            'sort': 'name'
-        },
+        variables = {
+            'filter': {
+                'per_page': -1,
+                'sort': 'name'
+            },
             'studio_filter': {
                 'scene_count': {
                     'modifier': 'GREATER_THAN',
@@ -301,6 +315,7 @@ query findSceneMarkers($markers_filter: SceneMarkerFilterType, $filter: FindFilt
         }
         performers {
           name
+          image_path
         }
         tags {
           name
@@ -319,11 +334,12 @@ query findSceneMarkers($markers_filter: SceneMarkerFilterType, $filter: FindFilt
 }
 """
 
-        variables = {'filter': {
-            'per_page': -1,
-            'sort': sort_field if sort_field is not None else 'title',
-            'direction': 'DESC' if sort_dir == 1 else 'ASC'
-        }}
+        variables = {
+            'filter': {
+                'per_page': -1,
+                'sort': sort_field if sort_field is not None else 'title',
+                'direction': 'DESC' if sort_dir == 1 else 'ASC'
+            }}
 
         if markers_filter is not None:
             variables['markers_filter'] = markers_filter

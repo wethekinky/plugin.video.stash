@@ -1,13 +1,15 @@
 import json
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import List, Optional, Tuple
+
+import xbmc
 import xbmcgui
 import xbmcplugin
 
-from resources.lib import utils, criterion_parser
+from resources.lib import criterion_parser, utils
+from resources.lib.navigation import NavigationItem
 from resources.lib.stash_interface import StashInterface
 from resources.lib.utils import local
-from resources.lib.navigation import NavigationItem
 
 
 class Listing(ABC):
@@ -22,7 +24,8 @@ class Listing(ABC):
     def list_items(self, params: dict):
         title = params['title'] if 'title' in params else self._label
 
-        criterion = json.loads(params['criterion']) if 'criterion' in params else {}
+        criterion = json.loads(
+            params['criterion']) if 'criterion' in params else {}
         sort_field = params['sort_field'] if 'sort_field' in params else None
         sort_dir = params['sort_dir'] if 'sort_dir' in params else 'asc'
 
@@ -35,20 +38,22 @@ class Listing(ABC):
         xbmcplugin.addSortMethod(self.handle, xbmcplugin.SORT_METHOD_NONE)
         xbmcplugin.endOfDirectory(self.handle)
 
-    def get_root_item(self, override_title: str = "") -> (xbmcgui.ListItem, str):
-        item = xbmcgui.ListItem(label=override_title if override_title != "" else self._label)
+    def get_root_item(self, override_title: str = "") -> Tuple[xbmcgui.ListItem, str]:
+        item = xbmcgui.ListItem(
+            label=override_title if override_title != "" else self._label)
         url = utils.get_url(list=self._type)
 
         return item, url
 
-    def get_filters(self) -> [(xbmcgui.ListItem, str)]:
+    def get_filters(self) -> List[Tuple[xbmcgui.ListItem, str]]:
         if self._filter_type is None:
             return []
 
         items = []
         default_filter = self._client.find_default_filter(self._filter_type)
         if default_filter is not None:
-            items.append(self._create_item_from_filter(default_filter, local.get_localized(30007)))
+            items.append(self._create_item_from_filter(
+                default_filter, local.get_localized(30007)))
         else:
             item = xbmcgui.ListItem(label=local.get_localized(30007))
             url = utils.get_url(list=self._type)
@@ -62,7 +67,7 @@ class Listing(ABC):
         return items
 
     @abstractmethod
-    def get_navigation(self) -> [NavigationItem]:
+    def get_navigation(self) -> List[NavigationItem]:
         pass
 
     @abstractmethod
@@ -70,42 +75,59 @@ class Listing(ABC):
         pass
 
     @abstractmethod
-    def _create_items(self, criterion: dict, sort_field: str, sort_dir: int, params: dict) -> [(xbmcgui.ListItem, str)]:
+    def _create_items(self, criterion: dict, sort_field: str, sort_dir: int, params: dict) -> List[Tuple[xbmcgui.ListItem, str]]:
         pass
 
-    def _create_item(self, scene: dict, **kwargs):
+    def _create_item(self, scene: dict, **kwargs) -> xbmcgui.ListItem:
         title = kwargs['title'] if 'title' in kwargs else scene['title']
+        # TODO set title to filename if empty
         screenshot = kwargs['screenshot'] if 'screenshot' in kwargs else scene['paths']['screenshot']
-        # * 2 because rating is 1 to 5 and Kodi uses 1 to 10
-        rating = scene['rating'] * 2 if 'rating' in scene and scene['rating'] is not None else 0
+
         duration = int(scene['file']['duration'])
+
         item = xbmcgui.ListItem(label=title)
-        item.setInfo('video', {'title': title,
-                               'mediatype': 'video',
-                               'plot': scene['details'],
-                               'cast': list(map(lambda p: p['name'], scene['performers'])),
-                               'duration': duration,
-                               'studio': scene['studio']['name'] if scene['studio'] is not None else None,
-                               'userrating': rating,
-                               'premiered': scene['date'],
-                               'tag': list(map(lambda t: t['name'], scene['tags'])),
-                               'dateadded': scene['created_at']
-                               })
 
-        item.addStreamInfo('video', {'codec': scene['file']['video_codec'],
-                                     'width': scene['file']['width'],
-                                     'height': scene['file']['height'],
-                                     'duration': duration})
+        vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
+        vinfo.setTitle(title)
+        vinfo.setMediaType('video')
+        vinfo.setPlot(scene['details'])
+        vinfo.setCast([xbmc.Actor(
+            name=performer['name'],
+            thumbnail=performer['image_path']
+        ) for performer in scene['performers']])
+        vinfo.setDuration(duration)
+        if scene['studio'] is not None:
+            vinfo.setStudios([scene['studio']['name']])
+        if 'rating' in scene:
+            vinfo.setUserRating(scene['rating'])
+        vinfo.setPremiered(scene['date'])
+        vinfo.setTags([t['name'] for t in scene['tags']])
+        vinfo.setDateAdded(scene['created_at'])
 
-        item.addStreamInfo('audio', {'codec': scene['file']['audio_codec']})
+        vinfo.addVideoStream(
+            xbmc.VideoStreamDetail(
+                width=scene['file']['width'],
+                height=scene['file']['height'],
+                duration=duration,
+                codec=scene['file']['video_codec']
+            )
+        )
+
+        vinfo.addAudioStream(
+            xbmc.AudioStreamDetail(
+                codec=scene['file']['audio_codec']
+            )
+        )
 
         screenshot = self._client.add_api_key(screenshot)
-        item.setArt({'thumb': screenshot, 'fanart': screenshot})
+        vinfo.addAvailableArtwork(screenshot, 'thumb')
+        vinfo.addAvailableArtwork(screenshot, 'fanart')
+
         item.setProperty('IsPlayable', 'true')
 
         return item
 
-    @staticmethod
+    @ staticmethod
     def _create_play_url(scene_id: int, **kwargs):
         kwargs['play'] = scene_id
         return utils.get_url(**kwargs)
@@ -113,16 +135,17 @@ class Listing(ABC):
     def _set_title(self, title: str):
         xbmcplugin.setPluginCategory(self.handle, title)
 
-    def _create_item_from_filter(self, filter: dict, override_title=None) -> [(xbmcgui.ListItem, str)]:
+    def _create_item_from_filter(self, filter: dict, override_title=None) -> Tuple[xbmcgui.ListItem, str]:
         title = override_title if override_title is not None else filter['name']
         item = xbmcgui.ListItem(label=title)
         filter_data = json.loads(filter['filter'])
         criterion_json = json.dumps(criterion_parser.parse(filter_data['c']))
 
-        url = utils.get_url(list=self._type,
-                            title=title,
-                            criterion=criterion_json,
-                            sort_field=filter_data.get('sortby'),
-                            sort_dir=filter_data.get('sortdir')
-                            )
+        url = utils.get_url(
+            list=self._type,
+            title=title,
+            criterion=criterion_json,
+            sort_field=filter_data.get('sortby'),
+            sort_dir=filter_data.get('sortdir')
+        )
         return item, url

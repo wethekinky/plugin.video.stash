@@ -1,0 +1,8 @@
+{
+    "python.autoComplete.extraPaths": [
+        "${workspaceRoot}/resources/lib"
+    ],
+    "python.analysis.extraPaths": [
+        "${workspaceRoot}/resources/lib"
+    ]
+}

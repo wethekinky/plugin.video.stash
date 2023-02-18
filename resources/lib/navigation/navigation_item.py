@@ -1,5 +1,6 @@
 import json
 from abc import ABC, abstractmethod
+from typing import List, Tuple
 import xbmcgui
 import xbmcplugin
 
@@ -16,7 +17,7 @@ class NavigationItem(ABC):
         self._browse_for = browse_for
         self._label = label
 
-    def get_root_item(self) -> (xbmcgui.ListItem, str):
+    def get_root_item(self) -> Tuple[xbmcgui.ListItem, str]:
         item = xbmcgui.ListItem(label=self._label)
         url = utils.get_url(browse=self._type, browse_for=self._browse_for)
 
@@ -33,14 +34,19 @@ class NavigationItem(ABC):
         xbmcplugin.endOfDirectory(self.handle)
 
     @abstractmethod
-    def _create_items(self) -> [(xbmcgui.ListItem, str)]:
+    def _create_items(self) -> List[Tuple[xbmcgui.ListItem, str]]:
         pass
 
     def _create_item(self, title: str, description: str = '', image_path: str = '') -> xbmcgui.ListItem:
         item = xbmcgui.ListItem(label=title)
-        item.setInfo('video', {'title': title,
-                               'mediatype': 'video',
-                               'plot': description})
+
+        item.setInfo(
+            'video', {
+                'title': title,
+                'mediatype': 'video',
+                'plot': description
+            }
+        )
 
         if image_path != '':
             item.setArt({'thumb': self._client.add_api_key(image_path)})

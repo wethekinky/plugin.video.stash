@@ -1,18 +1,33 @@
-from .navigation_item import NavigationItem
+from typing import List, Tuple
+
+import xbmcgui
+
 from resources.lib.stash_interface import StashInterface
 from resources.lib.utils import local
+
+from .navigation_item import NavigationItem
 
 
 class StudioItem(NavigationItem):
     def __init__(self, client: StashInterface, browse_for: str):
-        NavigationItem.__init__(self, client, 'studios', local.get_localized(30005), browse_for)
+        NavigationItem.__init__(self, client, 'studios',
+                                local.get_localized(30005), browse_for)
 
-    def _create_items(self):
-        (count, studios) = self._client.find_studios()
+    def _create_items(self) -> List[Tuple[xbmcgui.ListItem, str]]:
+        (_, studios) = self._client.find_studios()
         items = []
         for studio in studios:
-            criterion = {'studios': {'modifier': 'INCLUDES_ALL', 'value': [studio['id']], 'depth': 0}}
-            item = self._create_item(studio['name'], studio['details'], studio['image_path'])
+            criterion = {
+                'studios': {
+                    'modifier': 'INCLUDES_ALL',
+                    'value': [studio['id']], 'depth': 0
+                }
+            }
+            item = self._create_item(
+                studio['name'],
+                studio['details'],
+                studio['image_path']
+            )
             url = self._create_url(studio['name'], criterion)
             items.append((item, url))
 

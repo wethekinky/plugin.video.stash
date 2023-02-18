@@ -1,7 +1,8 @@
+from resources.lib.stash_interface import StashInterface
+
 from .listing import Listing
 from .scene_listing import SceneListing
 from .scene_marker_listing import SceneMarkerListing
-from resources.lib.stash_interface import StashInterface
 
 
 def create_listing(type: str, client: StashInterface) -> Listing:
