@@ -27,9 +27,16 @@ class TagItem(NavigationItem):
                     'modifier': 'INCLUDES_ALL', 'value': [tag['id']]
                 }
             }
+            description = tag['description']
+            parent_tags = ", ".join([t['name'] for t in tag['parents']])
+            if parent_tags:
+                description += f'\nParents: {parent_tags}'
+            child_tags = ", ".join([t['name'] for t in tag['children']])
+            if child_tags:
+                description += f'\nChildren: {child_tags}'
             item = self._create_item(
                 tag['name'],
-                tag['description'],
+                description,
                 image_path=tag['image_path']
             )
             url = self._create_url(tag['name'], criterion)

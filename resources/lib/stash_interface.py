@@ -191,7 +191,6 @@ query findPerformers($performer_filter: PerformerFilterType, $filter: FindFilter
       details
       gender
       favorite
-      scene_count
       image_path
     }
   }
@@ -225,6 +224,12 @@ query findTags($tag_filter: TagFilterType, $filter: FindFilterType!) {
       name
       description
       image_path
+      parents {
+        name
+      }
+      children {
+        name
+      }
     }
   }
 }

@@ -22,8 +22,8 @@ class PerformerItem(NavigationItem):
                     'modifier': 'INCLUDES_ALL', 'value': [performer['id']]
                 }
             }
-            details = f'''Gender: {performer['gender']}
-Scenes: {performer['scene_count']}
+            details = f'''{performer['name']}
+Gender: {performer['gender']}
 Aliases: {performer['aliases']}
 
 {performer['details']}
