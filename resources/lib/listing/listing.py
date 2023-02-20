@@ -92,7 +92,8 @@ class Listing(ABC):
         vinfo.setMediaType('video')
         vinfo.setPlot(scene['details'])
         vinfo.setCast([xbmc.Actor(
-            name=performer['name'] if not performer['disambiguation'] else f"{performer['name']} ({performer['disambiguation']})",
+            name=performer['name'] if not performer[
+                'disambiguation'] else f"{performer['name']} ({performer['disambiguation']})",
             thumbnail=self._client.add_api_key(performer['image_path'])
         ) for performer in scene['performers']])
         vinfo.setDuration(duration)
@@ -120,8 +121,10 @@ class Listing(ABC):
         )
 
         screenshot = self._client.add_api_key(screenshot)
-        vinfo.addAvailableArtwork(screenshot, 'thumb')
-        vinfo.addAvailableArtwork(screenshot, 'fanart')
+        item.setArt({
+            'thumb': screenshot,
+            'fanart': screenshot
+        })
 
         item.setProperty('IsPlayable', 'true')
 

@@ -48,8 +48,11 @@ class NavigationItem(ABC):
         vinfo.setPlot(description)
 
         if image_path != '':
-            vinfo.addAvailableArtwork(
-                self._client.add_api_key(image_path), 'thumb')
+            image_path = self._client.add_api_key(image_path)
+            item.setArt({
+                'thumb': image_path,
+                'fanart': image_path
+            })
 
         return item
 
