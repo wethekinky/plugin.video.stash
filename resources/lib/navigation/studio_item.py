@@ -20,7 +20,8 @@ class StudioItem(NavigationItem):
             criterion = {
                 'studios': {
                     'modifier': 'INCLUDES_ALL',
-                    'value': [studio['id']], 'depth': 0
+                    'value': [studio['id']],
+                    'depth': 0
                 }
             }
             item = self._create_item(

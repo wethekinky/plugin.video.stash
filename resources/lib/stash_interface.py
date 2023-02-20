@@ -18,10 +18,8 @@ class StashInterface:
         self._api_key = api_key
 
     def add_api_key(self, url: str) -> str:
-        if self._api_key:
-            url = "{}{}apikey={}".format(
-                url, '&' if '?' in url else '?', urllib.parse.quote(self._api_key))
-
+        if self._api_key and self._api_key not in url:
+            url = f"{url}{'&' if '?' in url else '?'}apikey={urllib.parse.quote(self._api_key)}"
         return url
 
     def __call_graphql(self, query, variables=None):
@@ -53,7 +51,7 @@ query findScenes($scene_filter: SceneFilterType, $filter: FindFilterType!) {
       id
       title
       details
-      rating
+      rating100
       date
       created_at
       paths {
@@ -105,7 +103,7 @@ query findScene($id: ID) {
     id
     title
     details
-    rating
+    rating100
     date
     created_at
     paths {
@@ -138,7 +136,7 @@ query findScene($id: ID) {
         id
         title
         details
-        rating
+        rating100
         date
         created_at
         paths {
@@ -302,7 +300,7 @@ query findSceneMarkers($markers_filter: SceneMarkerFilterType, $filter: FindFilt
         id
         title
         details
-        rating
+        rating100
         date
         created_at
         paths {

@@ -29,9 +29,9 @@ Aliases: {performer['aliases']}
 {performer['details']}
 '''
             item = self._create_item(
-                performer['name'],
-                details,
-                performer['image_path']
+                title=performer['name'],
+                description=details,
+                image_path=performer['image_path']
             )
             url = self._create_url(performer['name'], criterion)
             items.append((item, url))

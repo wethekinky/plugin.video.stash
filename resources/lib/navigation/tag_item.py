@@ -27,6 +27,7 @@ class TagItem(NavigationItem):
                     'modifier': 'INCLUDES_ALL', 'value': [tag['id']]
                 }
             }
+
             description = tag['description'] if tag['description'] is not None else ""
             parent_tags = ", ".join([t['name'] for t in tag['parents']])
             if parent_tags:
@@ -34,9 +35,10 @@ class TagItem(NavigationItem):
             child_tags = ", ".join([t['name'] for t in tag['children']])
             if child_tags:
                 description += f'\nChildren: {child_tags}'
+
             item = self._create_item(
-                tag['name'],
-                description,
+                title=tag['name'],
+                description=description,
                 image_path=tag['image_path']
             )
             url = self._create_url(tag['name'], criterion)

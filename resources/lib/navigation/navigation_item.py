@@ -1,6 +1,8 @@
 import json
 from abc import ABC, abstractmethod
 from typing import List, Tuple
+
+import xbmc
 import xbmcgui
 import xbmcplugin
 
@@ -40,16 +42,14 @@ class NavigationItem(ABC):
     def _create_item(self, title: str, description: str = '', image_path: str = '') -> xbmcgui.ListItem:
         item = xbmcgui.ListItem(label=title)
 
-        item.setInfo(
-            'video', {
-                'title': title,
-                'mediatype': 'video',
-                'plot': description
-            }
-        )
+        vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
+        vinfo.setMediaType('video')
+        vinfo.setTitle(title)
+        vinfo.setPlot(description)
 
         if image_path != '':
-            item.setArt({'thumb': self._client.add_api_key(image_path)})
+            vinfo.addAvailableArtwork(
+                self._client.add_api_key(image_path), 'thumb')
 
         return item
 

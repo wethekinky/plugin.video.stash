@@ -47,7 +47,11 @@ class SceneMarkerListing(Listing):
             title = '{} - {}'.format(marker['title'],
                                      marker['primary_tag']['name'])
             item = self._create_item(
-                marker['scene'], title=title, screenshot=marker['screenshot'])
+                marker['scene'],
+                title=title,
+                screenshot=marker['screenshot']
+            )
+
             url = self._create_play_url(marker['scene']['id'])
 
             vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
@@ -55,9 +59,6 @@ class SceneMarkerListing(Listing):
                 float(marker['seconds']),
                 float(marker['scene']['file']['duration'])
             )
-
-            # item.setProperty('StartPercent', str(
-            #     round(marker['seconds'] / duration * 100, 2)))
 
             items.append((item, url))
 

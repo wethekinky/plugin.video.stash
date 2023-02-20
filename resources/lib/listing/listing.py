@@ -93,7 +93,7 @@ class Listing(ABC):
         vinfo.setPlot(scene['details'])
         vinfo.setCast([xbmc.Actor(
             name=performer['name'],
-            thumbnail=performer['image_path']
+            thumbnail=self._client.add_api_key(performer['image_path'])
         ) for performer in scene['performers']])
         vinfo.setDuration(duration)
         if scene['studio'] is not None:
