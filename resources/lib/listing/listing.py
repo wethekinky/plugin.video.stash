@@ -98,8 +98,8 @@ class Listing(ABC):
         vinfo.setDuration(duration)
         if scene['studio'] is not None:
             vinfo.setStudios([scene['studio']['name']])
-        if 'rating' in scene:
-            vinfo.setUserRating(scene['rating'])
+        if 'rating100' in scene:
+            vinfo.setUserRating(scene['rating100'])
         vinfo.setPremiered(scene['date'])
         vinfo.setTags([t['name'] for t in scene['tags']])
         vinfo.setDateAdded(scene['created_at'])
