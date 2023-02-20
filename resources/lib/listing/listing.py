@@ -85,14 +85,14 @@ class Listing(ABC):
 
         duration = int(scene['file']['duration'])
 
-        item = xbmcgui.ListItem(label=title)
+        item: xbmcgui.ListItem = xbmcgui.ListItem(label=title)
 
         vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
         vinfo.setTitle(title)
         vinfo.setMediaType('video')
         vinfo.setPlot(scene['details'])
         vinfo.setCast([xbmc.Actor(
-            name=performer['name'],
+            name=performer['name'] if not performer['disambiguation'] else f"{performer['name']} ({performer['disambiguation']})",
             thumbnail=self._client.add_api_key(performer['image_path'])
         ) for performer in scene['performers']])
         vinfo.setDuration(duration)

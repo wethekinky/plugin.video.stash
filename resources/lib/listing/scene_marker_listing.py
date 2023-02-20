@@ -54,11 +54,12 @@ class SceneMarkerListing(Listing):
 
             url = self._create_play_url(marker['scene']['id'])
 
-            vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
-            vinfo.setResumePoint(
-                float(marker['seconds']),
-                float(marker['scene']['file']['duration'])
-            )
+            # vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
+            # vinfo.setResumePoint(
+            #     float(marker['seconds']),
+            #     float(marker['scene']['file']['duration'])
+            # )
+            item.setProperty('StartOffset', str(float(marker['seconds'])))
 
             items.append((item, url))
 

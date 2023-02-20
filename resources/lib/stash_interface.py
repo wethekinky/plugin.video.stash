@@ -56,6 +56,9 @@ query findScenes($scene_filter: SceneFilterType, $filter: FindFilterType!) {
       created_at
       paths {
         screenshot
+        preview
+        stream
+        webp
       }
       file {
         duration
@@ -69,6 +72,7 @@ query findScenes($scene_filter: SceneFilterType, $filter: FindFilterType!) {
       }
       performers {
         name
+        disambiguation
         image_path
       }
       tags {
@@ -107,8 +111,10 @@ query findScene($id: ID) {
     date
     created_at
     paths {
-      stream
       screenshot
+      preview
+      stream
+      webp
     }
     file {
       duration
@@ -122,6 +128,7 @@ query findScene($id: ID) {
     }
     performers {
       name
+      disambiguation
       image_path
     }
     tags {
@@ -185,7 +192,8 @@ query findPerformers($performer_filter: PerformerFilterType, $filter: FindFilter
     performers {
       id
       name
-      aliases
+      disambiguation
+      alias_list
       details
       gender
       favorite
@@ -305,6 +313,9 @@ query findSceneMarkers($markers_filter: SceneMarkerFilterType, $filter: FindFilt
         created_at
         paths {
           screenshot
+          preview
+          stream
+          webp
         }
         file {
           duration
@@ -318,6 +329,7 @@ query findSceneMarkers($markers_filter: SceneMarkerFilterType, $filter: FindFilt
         }
         performers {
           name
+          disambiguation
           image_path
         }
         tags {

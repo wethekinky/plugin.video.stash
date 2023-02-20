@@ -22,18 +22,22 @@ class PerformerItem(NavigationItem):
                     'modifier': 'INCLUDES_ALL', 'value': [performer['id']]
                 }
             }
-            details = f'''{performer['name']}
-Gender: {performer['gender']}
-Aliases: {performer['aliases']}
+            # if the performer has disambiguation information available, add it onto their name
+            name = performer['name']
+            if performer['disambiguation']:
+                name = f"{name} ({performer['disambiguation']})"
+
+            details = f'''Gender: {performer['gender']}
+Aliases: {', '.join(performer['alias_list'])}
 
 {performer['details']}
 '''
             item = self._create_item(
-                title=performer['name'],
+                title=name,
                 description=details,
                 image_path=performer['image_path']
             )
-            url = self._create_url(performer['name'], criterion)
+            url = self._create_url(name, criterion)
             items.append((item, url))
 
         return items
