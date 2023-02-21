@@ -80,14 +80,22 @@ class Listing(ABC):
 
     def _create_item(self, scene: dict, **kwargs) -> xbmcgui.ListItem:
         title = kwargs['title'] if 'title' in kwargs else scene['title']
-        # TODO set title to filename if empty
+
         screenshot = kwargs['screenshot'] if 'screenshot' in kwargs else scene['paths']['screenshot']
 
-        duration = int(scene['file']['duration'])
+        file = None
+        files = scene.get('files')
+        if files and len(files) > 0:
+            file = files[0]
+
+        duration = int(file['duration'])
+        if not title:
+            title = file['basename']
 
         item: xbmcgui.ListItem = xbmcgui.ListItem(label=title)
 
         vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
+        vinfo.setFilenameAndPath(files['path'])
         vinfo.setTitle(title)
         vinfo.setMediaType('video')
         vinfo.setPlot(scene['details'])
@@ -96,7 +104,7 @@ class Listing(ABC):
                 'disambiguation'] else f"{performer['name']} ({performer['disambiguation']})",
             thumbnail=self._client.add_api_key(performer['image_path'])
         ) for performer in scene['performers']])
-        vinfo.setDuration(duration)
+
         if scene['studio'] is not None:
             vinfo.setStudios([scene['studio']['name']])
         if scene.get('rating100', None) is not None:
@@ -104,19 +112,19 @@ class Listing(ABC):
         vinfo.setPremiered(scene['date'])
         vinfo.setTags([t['name'] for t in scene['tags']])
         vinfo.setDateAdded(scene['created_at'])
+        vinfo.setDuration(duration)
 
         vinfo.addVideoStream(
             xbmc.VideoStreamDetail(
-                width=scene['file']['width'],
-                height=scene['file']['height'],
+                width=file['width'],
+                height=file['height'],
                 duration=duration,
-                codec=scene['file']['video_codec']
+                codec=file['video_codec']
             )
         )
-
         vinfo.addAudioStream(
             xbmc.AudioStreamDetail(
-                codec=scene['file']['audio_codec']
+                codec=file['audio_codec']
             )
         )
 

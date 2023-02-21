@@ -67,6 +67,15 @@ query findScenes($scene_filter: SceneFilterType, $filter: FindFilterType!) {
         width
         height
       }
+      files {
+        path
+        basename
+        duration
+        video_codec
+        audio_codec
+        width
+        height
+      }
       studio {
         name
       }
@@ -123,6 +132,15 @@ query findScene($id: ID) {
       width
       height
     }
+    files {
+      path
+      basename
+      duration
+      video_codec
+      audio_codec
+      width
+      height
+    }
     studio {
       name
     }
@@ -150,6 +168,15 @@ query findScene($id: ID) {
           screenshot
         }
         file {
+          duration
+          video_codec
+          audio_codec
+          width
+          height
+        }
+        files {
+          path
+          basename
           duration
           video_codec
           audio_codec
@@ -318,6 +345,15 @@ query findSceneMarkers($markers_filter: SceneMarkerFilterType, $filter: FindFilt
           webp
         }
         file {
+          duration
+          video_codec
+          audio_codec
+          width
+          height
+        }
+        files {
+          path
+          basename
           duration
           video_codec
           audio_codec
