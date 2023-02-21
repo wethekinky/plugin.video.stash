@@ -95,7 +95,7 @@ class Listing(ABC):
         item: xbmcgui.ListItem = xbmcgui.ListItem(label=title)
 
         vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
-        vinfo.setFilenameAndPath(files['path'])
+        vinfo.setFilenameAndPath(file['path'])
         vinfo.setTitle(title)
         vinfo.setMediaType('video')
         vinfo.setPlot(scene['details'])
