@@ -92,7 +92,8 @@ class Listing(ABC):
             else scene["paths"]["screenshot"]
         )
 
-        files: List[Dict] = scene.get("files", [])
+        # grab the first file from the list of files
+        files: List[Dict] = scene.get("files", [{}])
         file: Dict = files[0]
 
         duration = int(file["duration"])
