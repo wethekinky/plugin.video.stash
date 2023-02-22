@@ -66,7 +66,14 @@ class SceneMarkerListing(Listing):
                 marker["scene"], title=title, screenshot=marker["screenshot"]
             )
 
-            url = self._create_play_url(marker["stream"])
+            url = self._create_play_url(marker["scene"]["paths"]["stream"])
+
+            # grab the first file from the list of files
+            files: List[Dict] = marker["scene"].get("files", [{}])
+            file: Dict = files[0]
+
+            vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
+            vinfo.setResumePoint(float(marker["seconds"]), float(file["duration"]))
 
             items.append((url, item, False))
 

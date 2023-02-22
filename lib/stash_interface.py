@@ -150,7 +150,40 @@ query findScene($id: ID) {
       title
       seconds
       screenshot
-      stream
+      scene {
+        id
+        title
+        details
+        rating100
+        date
+        created_at
+        play_count
+        paths {
+          screenshot
+          preview
+          stream
+        }
+        files {
+          path
+          basename
+          duration
+          video_codec
+          audio_codec
+          width
+          height
+        }
+        studio {
+          name
+        }
+        performers {
+          name
+          disambiguation
+          image_path
+        }
+        tags {
+          name
+        }
+      }
       primary_tag {
         id
         name
