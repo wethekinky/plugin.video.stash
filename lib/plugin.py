@@ -7,11 +7,11 @@ import xbmcaddon
 import xbmcgui
 import xbmcplugin
 
-from resources.lib import utils
-from resources.lib.listing import Listing, SceneListing, create_listing
-from resources.lib.navigation import NavigationItem
-from resources.lib.stash_interface import StashInterface
-from resources.lib.utils import local
+from lib import utils
+from lib.listing import Listing, SceneListing, create_listing
+from lib.navigation import NavigationItem
+from lib.stash_interface import StashInterface
+from lib.utils import local
 
 utils.BASE_URL = sys.argv[0]
 _HANDLE = int(sys.argv[1])
@@ -80,7 +80,8 @@ def list_items(params: dict):
 def browse_for(params: dict):
     listing = create_listing(params["browse_for"], CLIENT)
     navigation = listing.get_navigation_item(params)
-    navigation.list_items()
+    if navigation is not None:
+        navigation.list_items()
 
 
 def play(params: dict):

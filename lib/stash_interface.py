@@ -4,7 +4,6 @@ from typing import Any, Dict
 import requests
 
 
-
 class StashInterface:
     def __init__(self, url: str, api_key: str):
         if not url.endswith("/graphql"):
@@ -30,15 +29,15 @@ class StashInterface:
         if variables is not None:
             json["variables"] = variables
 
-        response = requests.post(self._url, json=json, headers=self._headers)
+        response = requests.post(
+            self._url, json=json, headers=self._headers, timeout=20
+        )
 
         if response.status_code == 200:
             result = response.json()
-            if result.get("errors", None):
-                for error in result["errors"]:
-                    raise Exception("GraphQL error: {}".format(error["message"]))
-            if result.get("data", None):
-                return result.get("data")
+            for error in result.get("errors", []):
+                raise Exception("GraphQL error: {}".format(error.get("message")))
+            return result.get("data", {})
         else:
             raise Exception(
                 "GraphQL query failed:{} - {}. Query: {}. Variables: {}".format(

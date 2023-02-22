@@ -1,9 +1,9 @@
 {
     "python.autoComplete.extraPaths": [
-        "${workspaceRoot}/resources/lib"
+        "${workspaceRoot}/lib"
     ],
     "python.analysis.extraPaths": [
-        "${workspaceRoot}/resources/lib"
+        "${workspaceRoot}/lib"
     ],
     "python.analysis.typeCheckingMode": "basic",
     "python.formatting.provider": "black"

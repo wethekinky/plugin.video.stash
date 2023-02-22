@@ -1,4 +1,4 @@
-from resources.lib.stash_interface import StashInterface
+from lib.stash_interface import StashInterface
 
 from .listing import Listing
 from .scene_listing import SceneListing

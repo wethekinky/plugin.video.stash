@@ -2,9 +2,9 @@ from typing import List, Optional, Tuple
 
 import xbmcgui
 
-from resources.lib.navigation import NavigationItem, PerformerItem, StudioItem, TagItem
-from resources.lib.stash_interface import StashInterface
-from resources.lib.utils import get_url, local
+from lib.navigation import NavigationItem, PerformerItem, StudioItem, TagItem
+from lib.stash_interface import StashInterface
+from lib.utils import get_url, local
 
 from .listing import Listing
 

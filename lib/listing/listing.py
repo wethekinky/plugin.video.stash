@@ -1,15 +1,15 @@
 import json
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import xbmc
 import xbmcgui
 import xbmcplugin
 
-from resources.lib import criterion_parser, utils
-from resources.lib.navigation import NavigationItem
-from resources.lib.stash_interface import StashInterface
-from resources.lib.utils import local
+from lib import criterion_parser, utils
+from lib.navigation import NavigationItem
+from lib.stash_interface import StashInterface
+from lib.utils import local
 
 
 class Listing(ABC):

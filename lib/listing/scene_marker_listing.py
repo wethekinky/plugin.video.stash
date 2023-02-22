@@ -3,8 +3,8 @@ from typing import Dict, List, Optional, Tuple
 import xbmc
 import xbmcgui
 
-from resources.lib.stash_interface import StashInterface
-from resources.lib.utils import local
+from lib.stash_interface import StashInterface
+from lib.utils import local
 
 from ..navigation import NavigationItem, PerformerItem, TagItem
 from .listing import Listing
@@ -61,7 +61,7 @@ class SceneMarkerListing(Listing):
 
         items = []
         for marker in markers:
-            title = "{} - {}".format(marker["title"], marker["primary_tag"]["name"])
+            title = f"{marker['title']} - {marker['primary_tag']['name']}"
             item = self._create_item(
                 marker["scene"], title=title, screenshot=marker["screenshot"]
             )

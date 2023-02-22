@@ -6,8 +6,8 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 
-from resources.lib import utils
-from resources.lib.stash_interface import StashInterface
+from lib import utils
+from lib.stash_interface import StashInterface
 
 
 class NavigationItem(ABC):
@@ -20,10 +20,9 @@ class NavigationItem(ABC):
         self._label = label
 
     def get_root_item(self) -> Tuple[xbmcgui.ListItem, str]:
-        item = xbmcgui.ListItem(label=self._label)
-        url = utils.get_url(browse=self._type, browse_for=self._browse_for)
-
-        return item, url
+        return xbmcgui.ListItem(label=self._label), utils.get_url(
+            browse=self._type, browse_for=self._browse_for
+        )
 
     def list_items(self):
         xbmcplugin.setPluginCategory(self.handle, self._label)
