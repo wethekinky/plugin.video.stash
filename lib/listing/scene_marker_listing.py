@@ -73,7 +73,7 @@ class SceneMarkerListing(Listing):
             file: Dict = files[0]
 
             vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
-            vinfo.setResumePoint(float(marker["seconds"]), float(file["duration"]))
+            vinfo.setResumePoint(float(marker["seconds"]))
 
             items.append((url, item, False))
 
