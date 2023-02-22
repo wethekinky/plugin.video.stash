@@ -68,8 +68,7 @@ class SceneMarkerListing(Listing):
 
             url = self._create_play_url(marker["scene"]["paths"]["stream"])
 
-            vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
-            vinfo.setResumePoint(float(marker["seconds"]))
+            item.setProperty("StartOffset", str(float(marker["seconds"])))
 
             items.append((url, item, False))
 
