@@ -1,5 +1,4 @@
 import sys
-from typing import Optional
 from urllib.parse import parse_qsl
 
 import xbmc
@@ -35,8 +34,7 @@ def browse_root():
     xbmcplugin.setContent(_HANDLE, "videos")
 
     listing = SceneListing(CLIENT)
-    for item, url in listing.get_filters():
-        xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
+    xbmcplugin.addDirectoryItems(_HANDLE, listing.get_filters())
 
     (item, url) = listing.get_root_item(local.get_localized(30002))
     xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
@@ -58,14 +56,13 @@ def browse(params):
     xbmcplugin.setContent(_HANDLE, "videos")
 
     listing = create_listing(params["browse"], CLIENT)
-    for item, url in listing.get_filters():
-        xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
+    xbmcplugin.addDirectoryItems(_HANDLE, listing.get_filters())
 
     (item, url) = listing.get_root_item(local.get_localized(30002))
     xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
 
-    for navItem in listing.get_navigation():
-        (item, url) = navItem.get_root_item()
+    for nav_item in listing.get_navigation():
+        (item, url) = nav_item.get_root_item()
         xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
 
     xbmcplugin.addSortMethod(_HANDLE, xbmcplugin.SORT_METHOD_NONE)
@@ -94,7 +91,7 @@ def increment_o(params: dict):
     if "scene" in params:
         o_count = CLIENT.scene_increment_o(params["scene"])
         xbmc.executebuiltin(
-            "Notification(Stash, {} {})".format(local.get_localized(30009), o_count)
+            f"Notification(Stash, {local.get_localized(30009)} {o_count})"
         )
 
 

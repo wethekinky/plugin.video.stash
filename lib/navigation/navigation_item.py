@@ -28,14 +28,13 @@ class NavigationItem(ABC):
         xbmcplugin.setPluginCategory(self.handle, self._label)
         xbmcplugin.setContent(self.handle, "videos")
 
-        for item, url in self._create_items():
-            xbmcplugin.addDirectoryItem(self.handle, url, item, True)
+        xbmcplugin.addDirectoryItems(self.handle, self._create_items())
 
         xbmcplugin.addSortMethod(self.handle, xbmcplugin.SORT_METHOD_NONE)
         xbmcplugin.endOfDirectory(self.handle)
 
     @abstractmethod
-    def _create_items(self) -> List[Tuple[xbmcgui.ListItem, str]]:
+    def _create_items(self) -> List[Tuple[str, xbmcgui.ListItem, bool]]:
         pass
 
     def _create_item(

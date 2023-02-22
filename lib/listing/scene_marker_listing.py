@@ -48,7 +48,7 @@ class SceneMarkerListing(Listing):
 
     def _create_items(
         self, criterion: dict, sort_field: str, sort_dir: int, params: dict
-    ) -> List[Tuple[xbmcgui.ListItem, str]]:
+    ) -> List[Tuple[str, xbmcgui.ListItem, bool]]:
         if "scene" in params:
             scene = self._client.find_scene(params["scene"])
 
@@ -59,7 +59,7 @@ class SceneMarkerListing(Listing):
                 criterion, sort_field, sort_dir
             )
 
-        items = []
+        items: List[Tuple[str, xbmcgui.ListItem, bool]] = []
         for marker in markers:
             title = f"{marker['title']} - {marker['primary_tag']['name']}"
             item = self._create_item(
@@ -75,6 +75,6 @@ class SceneMarkerListing(Listing):
             vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
             vinfo.setResumePoint(float(marker["seconds"]), float(file["duration"]))
 
-            items.append((item, url))
+            items.append((url, item, False))
 
         return items

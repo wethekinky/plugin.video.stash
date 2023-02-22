@@ -33,9 +33,9 @@ class SceneListing(Listing):
 
     def _create_items(
         self, criterion: dict, sort_field: str, sort_dir: str, params: dict
-    ) -> List[Tuple[xbmcgui.ListItem, str]]:
+    ) -> List[Tuple[str, xbmcgui.ListItem, bool]]:
         (_, scenes) = self._client.find_scenes(criterion, sort_field, sort_dir)
-        items = []
+        items: List[Tuple[str, xbmcgui.ListItem, bool]] = []
         for scene in scenes:
             item = self._create_item(scene)
             url = self._create_play_url(scene["id"])
@@ -56,6 +56,6 @@ class SceneListing(Listing):
             )
             item.addContextMenuItems(menu)
 
-            items.append((item, url))
+            items.append((url, item, False))
 
         return items

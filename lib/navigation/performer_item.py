@@ -14,9 +14,9 @@ class PerformerItem(NavigationItem):
             self, client, "performers", local.get_localized(30003), browse_for
         )
 
-    def _create_items(self) -> List[Tuple[xbmcgui.ListItem, str]]:
+    def _create_items(self) -> List[Tuple[str, xbmcgui.ListItem, bool]]:
         (_, performers) = self._client.find_performers()
-        items = []
+        items: List[Tuple[str, xbmcgui.ListItem, bool]] = []
         for performer in performers:
             criterion = {
                 "performers": {"modifier": "INCLUDES_ALL", "value": [performer["id"]]}
@@ -35,6 +35,6 @@ Aliases: {', '.join(performer['alias_list'])}
                 title=name, description=details, image_path=performer["image_path"]
             )
             url = self._create_url(name, criterion)
-            items.append((item, url))
+            items.append((url, item, True))
 
         return items

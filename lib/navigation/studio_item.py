@@ -14,9 +14,9 @@ class StudioItem(NavigationItem):
             self, client, "studios", local.get_localized(30005), browse_for
         )
 
-    def _create_items(self) -> List[Tuple[xbmcgui.ListItem, str]]:
+    def _create_items(self) -> List[Tuple[str, xbmcgui.ListItem, bool]]:
         (_, studios) = self._client.find_studios()
-        items = []
+        items: List[Tuple[str, xbmcgui.ListItem, bool]] = []
         for studio in studios:
             criterion = {
                 "studios": {
@@ -33,6 +33,6 @@ class StudioItem(NavigationItem):
                 else "",
             )
             url = self._create_url(studio["name"], criterion)
-            items.append((item, url))
+            items.append((url, item, True))
 
         return items

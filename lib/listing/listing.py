@@ -33,8 +33,9 @@ class Listing(ABC):
         xbmcplugin.setPluginCategory(self.handle, title)
         xbmcplugin.setContent(self.handle, "videos")
 
-        for item, url in self._create_items(criterion, sort_field, sort_dir, params):
-            xbmcplugin.addDirectoryItem(self.handle, url, item, False)
+        xbmcplugin.addDirectoryItems(
+            self.handle, self._create_items(criterion, sort_field, sort_dir, params)
+        )
 
         xbmcplugin.addSortMethod(self.handle, xbmcplugin.SORT_METHOD_NONE)
         xbmcplugin.endOfDirectory(self.handle)
@@ -47,11 +48,11 @@ class Listing(ABC):
 
         return item, url
 
-    def get_filters(self) -> List[Tuple[xbmcgui.ListItem, str]]:
+    def get_filters(self) -> List[Tuple[str, xbmcgui.ListItem, bool]]:
         if self._filter_type is None:
             return []
 
-        items = []
+        items: List[Tuple[str, xbmcgui.ListItem, bool]] = []
         default_filter = self._client.find_default_filter(self._filter_type)
         if default_filter is not None:
             items.append(
@@ -62,7 +63,7 @@ class Listing(ABC):
         else:
             item = xbmcgui.ListItem(label=local.get_localized(30007))
             url = utils.get_url(list=self._type)
-            items.append((item, url))
+            items.append((url, item, True))
 
         saved_filters = self._client.find_saved_filters(self._filter_type)
 
@@ -86,7 +87,7 @@ class Listing(ABC):
         sort_field: Optional[str],
         sort_dir: Optional[Union[str, int]],
         params: dict,
-    ) -> List[Tuple[xbmcgui.ListItem, str]]:
+    ) -> List[Tuple[str, xbmcgui.ListItem, bool]]:
         pass
 
     def _create_item(self, scene: dict, **kwargs) -> xbmcgui.ListItem:
@@ -161,7 +162,7 @@ class Listing(ABC):
 
     def _create_item_from_filter(
         self, _filter: dict, override_title=None
-    ) -> Tuple[xbmcgui.ListItem, str]:
+    ) -> Tuple[str, xbmcgui.ListItem, bool]:
         """Create an item from a filter. Filters are provided as JSON encoded strings."""
 
         title = override_title if override_title is not None else _filter["name"]
@@ -177,4 +178,4 @@ class Listing(ABC):
             sort_dir=filter_data.get("sortdir"),
         )
 
-        return item, url
+        return url, item, True

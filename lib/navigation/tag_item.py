@@ -16,11 +16,11 @@ class TagItem(NavigationItem):
 
         self._filter_name = kwargs["filter_name"] if "filter_name" in kwargs else type
 
-    def _create_items(self) -> List[Tuple[xbmcgui.ListItem, str]]:
+    def _create_items(self) -> List[Tuple[str, xbmcgui.ListItem, bool]]:
         (_, tags) = self._client.find_tags(
             has_type="scenes" if self._type == "scene_tags" else self._browse_for
         )
-        items = []
+        items: List[Tuple[str, xbmcgui.ListItem, bool]] = []
         for tag in tags:
             criterion = {
                 self._filter_name: {"modifier": "INCLUDES_ALL", "value": [tag["id"]]}
@@ -40,6 +40,6 @@ class TagItem(NavigationItem):
                 image_path=tag["image_path"] if tag.get("image_count", 0) > 0 else "",
             )
             url = self._create_url(tag["name"], criterion)
-            items.append((item, url))
+            items.append((url, item, True))
 
         return items
