@@ -1,6 +1,8 @@
 import urllib.parse
 from typing import Any, Dict
 
+import requests
+
 
 
 class StashInterface:
