@@ -1,6 +1,6 @@
 import json
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import xbmc
 import xbmcgui
@@ -25,8 +25,10 @@ class Listing(ABC):
         title = params["title"] if "title" in params else self._label
 
         criterion = json.loads(params["criterion"]) if "criterion" in params else {}
-        sort_field = params["sort_field"] if "sort_field" in params else None
-        sort_dir = params["sort_dir"] if "sort_dir" in params else "asc"
+        sort_field: Optional[Union[str, int]] = (
+            params["sort_field"] if "sort_field" in params else None
+        )
+        sort_dir: Optional[str] = params["sort_dir"] if "sort_dir" in params else "asc"
 
         xbmcplugin.setPluginCategory(self.handle, title)
         xbmcplugin.setContent(self.handle, "videos")
@@ -79,7 +81,11 @@ class Listing(ABC):
 
     @abstractmethod
     def _create_items(
-        self, criterion: dict, sort_field: str, sort_dir: int, params: dict
+        self,
+        criterion: dict,
+        sort_field: Optional[str],
+        sort_dir: Optional[Union[str, int]],
+        params: dict,
     ) -> List[Tuple[xbmcgui.ListItem, str]]:
         pass
 

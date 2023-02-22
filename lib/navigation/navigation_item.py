@@ -46,7 +46,8 @@ class NavigationItem(ABC):
         vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
         vinfo.setMediaType("video")
         vinfo.setTitle(title)
-        vinfo.setPlot(description)
+        if description != "":
+            vinfo.setPlot(description)
 
         if image_path != "":
             image_path = self._client.add_api_key(image_path)

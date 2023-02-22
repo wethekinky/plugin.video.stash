@@ -45,15 +45,13 @@ class SceneListing(Listing):
                 menu.append(
                     (
                         local.get_localized(30010),
-                        "ActivateWindow(videos, {})".format(
-                            get_url(list="scene_markers", scene=scene["id"])
-                        ),
+                        f'ActivateWindow(videos, {get_url(list="scene_markers", scene=scene["id"])})',
                     )
                 )
             menu.append(
                 (
                     local.get_localized(30008),
-                    "RunPlugin({})".format(get_url(increment_o="", scene=scene["id"])),
+                    f'RunPlugin({get_url(increment_o="", scene=scene["id"])})',
                 )
             )
             item.addContextMenuItems(menu)

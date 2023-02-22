@@ -52,7 +52,7 @@ class SceneMarkerListing(Listing):
         if "scene" in params:
             scene = self._client.find_scene(params["scene"])
 
-            self._set_title("{} {}".format(local.get_localized(30011), scene["title"]))
+            self._set_title(f'{local.get_localized(30011)} {scene["title"]}')
             markers = scene["scene_markers"]
         else:
             (_, markers) = self._client.find_scene_markers(

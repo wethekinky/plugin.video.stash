@@ -26,7 +26,11 @@ class StudioItem(NavigationItem):
                 }
             }
             item = self._create_item(
-                studio["name"], studio["details"], studio["image_path"]
+                studio["name"],
+                studio["details"],
+                studio["image_path"]
+                if "default=true" not in studio["image_path"]
+                else "",
             )
             url = self._create_url(studio["name"], criterion)
             items.append((item, url))
