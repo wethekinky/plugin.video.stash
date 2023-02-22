@@ -110,7 +110,6 @@ class Listing(ABC):
         item: xbmcgui.ListItem = xbmcgui.ListItem(label=title)
 
         vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
-        vinfo.setFilenameAndPath(file["path"])
         vinfo.setTitle(title)
         vinfo.setMediaType("video")
         vinfo.setPlot(scene["details"])
@@ -125,7 +124,10 @@ class Listing(ABC):
                 for performer in scene["performers"]
             ]
         )
-
+        if scene.get("resume_time", None) is not None:
+            vinfo.setResumePoint(scene["resume_time"])
+        if scene.get("play_count", None) is not None:
+            vinfo.setPlaycount(scene["play_count"])
         if scene["studio"] is not None:
             vinfo.setStudios([scene["studio"]["name"]])
         if scene.get("rating100", None) is not None:

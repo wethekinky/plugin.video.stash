@@ -58,6 +58,8 @@ query findScenes($scene_filter: SceneFilterType, $filter: FindFilterType!) {
       rating100
       date
       created_at
+      resume_time
+      play_count
       paths {
         screenshot
         preview
@@ -116,6 +118,8 @@ query findScene($id: ID) {
     rating100
     date
     created_at
+    resume_time
+    play_count
     paths {
       screenshot
       preview
@@ -313,6 +317,7 @@ query findSceneMarkers($markers_filter: SceneMarkerFilterType, $filter: FindFilt
         rating100
         date
         created_at
+        play_count
         paths {
           screenshot
           preview
