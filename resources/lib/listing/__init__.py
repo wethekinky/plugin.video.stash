@@ -5,8 +5,7 @@ from .scene_listing import SceneListing
 from .scene_marker_listing import SceneMarkerListing
 
 
-def create_listing(type: str, client: StashInterface) -> Listing:
-    if type == 'scenes':
-        return SceneListing(client)
-    elif type == 'scene_markers':
+def create_listing(_type: str, client: StashInterface) -> Listing:
+    if _type == "scene_markers":
         return SceneMarkerListing(client)
+    return SceneListing(client)

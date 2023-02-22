@@ -4,5 +4,7 @@
     ],
     "python.analysis.extraPaths": [
         "${workspaceRoot}/resources/lib"
-    ]
+    ],
+    "python.analysis.typeCheckingMode": "basic",
+    "python.formatting.provider": "black"
 }
