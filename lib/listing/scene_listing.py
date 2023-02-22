@@ -38,7 +38,7 @@ class SceneListing(Listing):
         items: List[Tuple[str, xbmcgui.ListItem, bool]] = []
         for scene in scenes:
             item = self._create_item(scene)
-            url = self._create_play_url(scene["id"])
+            url = self._create_play_url(scene["paths"]["stream"])
 
             menu = []
             if len(scene["scene_markers"]) > 0:

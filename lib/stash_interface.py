@@ -150,36 +150,7 @@ query findScene($id: ID) {
       title
       seconds
       screenshot
-      scene {
-        id
-        title
-        details
-        rating100
-        date
-        created_at
-        paths {
-          screenshot
-        }
-        files {
-          path
-          basename
-          duration
-          video_codec
-          audio_codec
-          width
-          height
-        }
-        studio {
-          name
-        }
-        performers {
-          name
-          image_path
-        }
-        tags {
-          name
-        }
-      }
+      stream
       primary_tag {
         id
         name
@@ -310,6 +281,8 @@ query findSceneMarkers($markers_filter: SceneMarkerFilterType, $filter: FindFilt
       title
       seconds
       screenshot
+      stream
+      preview
       scene {
         id
         title

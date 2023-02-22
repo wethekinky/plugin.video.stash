@@ -155,8 +155,8 @@ class Listing(ABC):
         return item
 
     @staticmethod
-    def _create_play_url(scene_id: int, **kwargs):
-        kwargs["play"] = scene_id
+    def _create_play_url(stream: str, **kwargs):
+        kwargs["play"] = stream
         return utils.get_url(**kwargs)
 
     def _set_title(self, title: str):

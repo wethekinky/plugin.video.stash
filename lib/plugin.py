@@ -82,8 +82,7 @@ def browse_for(params: dict):
 
 
 def play(params: dict):
-    scene = CLIENT.find_scene(params["play"])
-    item = xbmcgui.ListItem(path=scene["paths"]["stream"])
+    item = xbmcgui.ListItem(path=CLIENT.add_api_key(params["play"]))
     xbmcplugin.setResolvedUrl(_HANDLE, True, listitem=item)
 
 
