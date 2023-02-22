@@ -236,6 +236,7 @@ query findTags($tag_filter: TagFilterType, $filter: FindFilterType!) {
       name
       description
       image_path
+      image_count
       parents {
         name
       }

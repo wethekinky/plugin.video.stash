@@ -35,7 +35,9 @@ class TagItem(NavigationItem):
                 description += f"\nChildren: {child_tags}"
 
             item = self._create_item(
-                title=tag["name"], description=description, image_path=tag["image_path"]
+                title=tag["name"],
+                description=description,
+                image_path=tag["image_path"] if tag.get("image_count", 0) > 0 else "",
             )
             url = self._create_url(tag["name"], criterion)
             items.append((item, url))
