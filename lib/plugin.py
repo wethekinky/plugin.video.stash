@@ -83,10 +83,6 @@ def browse_for(params: dict):
 
 def play(params: dict):
     item = xbmcgui.ListItem(path=CLIENT.add_api_key(params["play"]))
-    if "offset" in params:
-        vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
-        vinfo.setResumePoint(float(params["offset"]))
-        item.setProperty("StartOffset", str(params["offset"]))
     xbmcplugin.setResolvedUrl(_HANDLE, True, listitem=item)
 
 
