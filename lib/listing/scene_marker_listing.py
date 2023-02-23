@@ -1,6 +1,5 @@
 from typing import Dict, List, Optional, Tuple
 
-import xbmc
 import xbmcgui
 
 from lib.stash_interface import StashInterface
@@ -62,13 +61,13 @@ class SceneMarkerListing(Listing):
         items: List[Tuple[str, xbmcgui.ListItem, bool]] = []
         for marker in markers:
             title = f"{marker['title']} - {marker['primary_tag']['name']}"
-            item = self._create_item(
+            item: xbmcgui.ListItem = self._create_item(
                 marker["scene"], title=title, screenshot=marker["screenshot"]
             )
 
-            url = self._create_play_url(marker["scene"]["paths"]["stream"])
-
-            item.setProperty("StartOffset", str(float(marker["seconds"])))
+            url = self._create_play_url(
+                marker["scene"]["paths"]["stream"], offset=float(marker["seconds"])
+            )
 
             items.append((url, item, False))
 
