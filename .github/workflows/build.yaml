@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-          sed --in-place '/<addon/ s/version="[^"]*"/version="'${GITHUB_SHA::7}'"/' addon.xml
+          sed --in-place '/<addon/ s/version="[^"]*"/version="0.${{ github.run_number }}.${{ github.run_attempt }}"/' addon.xml
           mkdir -p /tmp/build/plugin.video.stash
           rsync -a --exclude 'resources/stash_logo.svg' addon.xml addon.py lib resources /tmp/build/plugin.video.stash
       - uses: actions/upload-artifact@v3
