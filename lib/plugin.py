@@ -1,5 +1,5 @@
 import sys
-from typing import Optional
+from typing import Tuple
 from urllib.parse import parse_qsl
 
 import xbmc
@@ -21,6 +21,8 @@ _ADDON = xbmcaddon.Addon()
 API_KEY: str = ""
 CLIENT: StashInterface
 
+DirectoryItem = Tuple[str, xbmcgui.ListItem, bool]
+
 
 def run():
     global API_KEY
@@ -35,15 +37,15 @@ def browse_root():
     xbmcplugin.setContent(_HANDLE, "videos")
 
     listing = SceneListing(CLIENT)
-    for item, url in listing.get_filters():
-        xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
+    for url, item, is_folder in listing.get_filters():
+        xbmcplugin.addDirectoryItem(_HANDLE, url, item, is_folder)
 
-    (item, url) = listing.get_root_item(local.get_localized(30002))
-    xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
+    (url, item, is_folder) = listing.get_root_item(local.get_localized(30002))
+    xbmcplugin.addDirectoryItem(_HANDLE, url, item, is_folder)
 
     for nav_item in listing.get_navigation():
-        (item, url) = nav_item.get_root_item()
-        xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
+        (url, item, is_folder) = nav_item.get_root_item()
+        xbmcplugin.addDirectoryItem(_HANDLE, url, item, is_folder)
 
     item = xbmcgui.ListItem(label=local.get_localized(30010))
     url = utils.get_url(browse="scene_markers")
@@ -58,15 +60,15 @@ def browse(params):
     xbmcplugin.setContent(_HANDLE, "videos")
 
     listing = create_listing(params["browse"], CLIENT)
-    for item, url in listing.get_filters():
-        xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
+    for url, item, is_folder in listing.get_filters():
+        xbmcplugin.addDirectoryItem(_HANDLE, url, item, is_folder)
 
-    (item, url) = listing.get_root_item(local.get_localized(30002))
-    xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
+    (url, item, is_folder) = listing.get_root_item(local.get_localized(30002))
+    xbmcplugin.addDirectoryItem(_HANDLE, url, item, is_folder)
 
-    for navItem in listing.get_navigation():
-        (item, url) = navItem.get_root_item()
-        xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
+    for nav_item in listing.get_navigation():
+        (url, item, is_folder) = nav_item.get_root_item()
+        xbmcplugin.addDirectoryItem(_HANDLE, url, item, is_folder)
 
     xbmcplugin.addSortMethod(_HANDLE, xbmcplugin.SORT_METHOD_NONE)
     xbmcplugin.endOfDirectory(_HANDLE)
@@ -94,7 +96,7 @@ def increment_o(params: dict):
     if "scene" in params:
         o_count = CLIENT.scene_increment_o(params["scene"])
         xbmc.executebuiltin(
-            "Notification(Stash, {} {})".format(local.get_localized(30009), o_count)
+            f"Notification(Stash, {local.get_localized(30009)} {o_count})"
         )
 
 

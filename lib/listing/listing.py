@@ -1,6 +1,6 @@
 import json
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Union
 
 import xbmc
 import xbmcgui
@@ -8,6 +8,7 @@ import xbmcplugin
 
 from lib import criterion_parser, utils
 from lib.navigation import NavigationItem
+from lib.plugin import DirectoryItem
 from lib.stash_interface import StashInterface
 from lib.utils import local
 
@@ -35,25 +36,28 @@ class Listing(ABC):
         xbmcplugin.setPluginCategory(self.handle, title)
         xbmcplugin.setContent(self.handle, "videos")
 
-        for item, url in self._create_items(criterion, sort_field, sort_dir, params):
-            xbmcplugin.addDirectoryItem(self.handle, url, item, False)
+        for url, item, is_folder in self._create_items(
+            criterion, sort_field, sort_dir, params
+        ):
+            xbmcplugin.addDirectoryItem(self.handle, url, item, is_folder)
 
         xbmcplugin.addSortMethod(self.handle, xbmcplugin.SORT_METHOD_NONE)
         xbmcplugin.endOfDirectory(self.handle)
 
-    def get_root_item(self, override_title: str = "") -> Tuple[xbmcgui.ListItem, str]:
-        item = xbmcgui.ListItem(
-            label=override_title if override_title != "" else self._label
+    def get_root_item(self, override_title: str = "") -> DirectoryItem:
+        return (
+            utils.get_url(list=self._type),
+            xbmcgui.ListItem(
+                label=override_title if override_title != "" else self._label
+            ),
+            True,
         )
-        url = utils.get_url(list=self._type)
 
-        return item, url
-
-    def get_filters(self) -> List[Tuple[xbmcgui.ListItem, str]]:
+    def get_filters(self) -> List[DirectoryItem]:
         if self._filter_type is None:
             return []
 
-        items = []
+        items: List[DirectoryItem] = []
         default_filter = self._client.find_default_filter(self._filter_type)
         if default_filter is not None:
             items.append(
@@ -64,7 +68,7 @@ class Listing(ABC):
         else:
             item = xbmcgui.ListItem(label=local.get_localized(30007))
             url = utils.get_url(list=self._type)
-            items.append((item, url))
+            items.append((url, item, True))
 
         saved_filters = self._client.find_saved_filters(self._filter_type)
 
@@ -88,7 +92,7 @@ class Listing(ABC):
         sort_field: Optional[str],
         sort_dir: Optional[Union[str, int]],
         params: dict,
-    ) -> List[Tuple[xbmcgui.ListItem, str]]:
+    ) -> List[DirectoryItem]:
         pass
 
     def _create_item(self, scene: dict, **kwargs) -> xbmcgui.ListItem:
@@ -111,7 +115,6 @@ class Listing(ABC):
         item: xbmcgui.ListItem = xbmcgui.ListItem(label=title)
 
         vinfo: xbmc.InfoTagVideo = item.getVideoInfoTag()
-        vinfo.setFilenameAndPath(file["path"])
         vinfo.setTitle(title)
         vinfo.setMediaType("video")
         vinfo.setPlot(scene["details"])
@@ -163,7 +166,7 @@ class Listing(ABC):
 
     def _create_item_from_filter(
         self, _filter: dict, override_title=None
-    ) -> Tuple[xbmcgui.ListItem, str]:
+    ) -> DirectoryItem:
         """Create an item from a filter. Filters are provided as JSON encoded strings."""
 
         title = override_title if override_title is not None else _filter["name"]
@@ -179,4 +182,4 @@ class Listing(ABC):
             sort_dir=filter_data.get("sortdir"),
         )
 
-        return item, url
+        return url, item, True

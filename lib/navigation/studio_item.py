@@ -1,7 +1,6 @@
-from typing import List, Tuple
+from typing import List
 
-import xbmcgui
-
+from lib.plugin import DirectoryItem
 from lib.stash_interface import StashInterface
 from lib.utils import local
 
@@ -14,9 +13,9 @@ class StudioItem(NavigationItem):
             self, client, "studios", local.get_localized(30005), browse_for
         )
 
-    def _create_items(self) -> List[Tuple[xbmcgui.ListItem, str]]:
+    def _create_items(self) -> List[DirectoryItem]:
         (_, studios) = self._client.find_studios()
-        items = []
+        items: List[DirectoryItem] = []
         for studio in studios:
             criterion = {
                 "studios": {
@@ -31,6 +30,6 @@ class StudioItem(NavigationItem):
                 studio["image_path"] if studio.get("image_count", 0) > 0 else "",
             )
             url = self._create_url(studio["name"], criterion)
-            items.append((item, url))
+            items.append((url, item, True))
 
         return items

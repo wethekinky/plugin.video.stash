@@ -1,7 +1,6 @@
-from typing import List, Tuple
+from typing import List
 
-import xbmcgui
-
+from lib.plugin import DirectoryItem
 from lib.stash_interface import StashInterface
 from lib.utils import local
 
@@ -14,9 +13,9 @@ class PerformerItem(NavigationItem):
             self, client, "performers", local.get_localized(30003), browse_for
         )
 
-    def _create_items(self) -> List[Tuple[xbmcgui.ListItem, str]]:
+    def _create_items(self) -> List[DirectoryItem]:
         (_, performers) = self._client.find_performers()
-        items = []
+        items: List[DirectoryItem] = []
         for performer in performers:
             criterion = {
                 "performers": {"modifier": "INCLUDES_ALL", "value": [performer["id"]]}
@@ -39,6 +38,6 @@ Aliases: {', '.join(performer['alias_list'])}
                 else "",
             )
             url = self._create_url(name, criterion)
-            items.append((item, url))
+            items.append((url, item, True))
 
         return items
