@@ -8,9 +8,8 @@ import xbmcplugin
 
 from lib import criterion_parser, utils
 from lib.navigation import NavigationItem
-from lib.plugin import DirectoryItem
 from lib.stash_interface import StashInterface
-from lib.utils import local
+from lib.utils import DirectoryItem, local
 
 
 class Listing(ABC):

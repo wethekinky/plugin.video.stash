@@ -1,5 +1,4 @@
 import sys
-from typing import Tuple
 from urllib.parse import parse_qsl
 
 import xbmc
@@ -20,8 +19,6 @@ Listing.handle = _HANDLE
 _ADDON = xbmcaddon.Addon()
 API_KEY: str = ""
 CLIENT: StashInterface
-
-DirectoryItem = Tuple[str, xbmcgui.ListItem, bool]
 
 
 def run():

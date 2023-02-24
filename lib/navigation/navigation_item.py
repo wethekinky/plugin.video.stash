@@ -6,9 +6,8 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 
-from lib import utils
-from lib.plugin import DirectoryItem
 from lib.stash_interface import StashInterface
+from lib.utils import DirectoryItem, get_url
 
 
 class NavigationItem(ABC):
@@ -22,7 +21,7 @@ class NavigationItem(ABC):
 
     def get_root_item(self) -> DirectoryItem:
         return (
-            utils.get_url(browse=self._type, browse_for=self._browse_for),
+            get_url(browse=self._type, browse_for=self._browse_for),
             xbmcgui.ListItem(label=self._label),
             True,
         )
@@ -62,4 +61,4 @@ class NavigationItem(ABC):
         kwargs["criterion"] = json.dumps(criterion)
         kwargs["list"] = self._browse_for
         kwargs["title"] = title
-        return utils.get_url(**kwargs)
+        return get_url(**kwargs)

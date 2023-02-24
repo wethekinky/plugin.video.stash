@@ -1,9 +1,8 @@
 from typing import List, Optional
 
 from lib.navigation import NavigationItem, PerformerItem, StudioItem, TagItem
-from lib.plugin import DirectoryItem
 from lib.stash_interface import StashInterface
-from lib.utils import get_url, local
+from lib.utils import DirectoryItem, get_url, local
 
 from .listing import Listing
 

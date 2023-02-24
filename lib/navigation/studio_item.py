@@ -1,8 +1,7 @@
 from typing import List
 
-from lib.plugin import DirectoryItem
 from lib.stash_interface import StashInterface
-from lib.utils import local
+from lib.utils import DirectoryItem, local
 
 from .navigation_item import NavigationItem
 

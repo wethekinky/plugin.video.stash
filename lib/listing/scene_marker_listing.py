@@ -2,9 +2,8 @@ from typing import Dict, List, Optional
 
 import xbmc
 
-from lib.plugin import DirectoryItem
 from lib.stash_interface import StashInterface
-from lib.utils import local
+from lib.utils import DirectoryItem, local
 
 from ..navigation import NavigationItem, PerformerItem, TagItem
 from .listing import Listing
