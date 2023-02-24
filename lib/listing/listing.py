@@ -13,6 +13,8 @@ from lib.utils import local
 
 
 class Listing(ABC):
+    """A Listing is a list of video files that can be played."""
+
     handle: int
 
     def __init__(self, client: StashInterface, _type: str, label: str, **kwargs):

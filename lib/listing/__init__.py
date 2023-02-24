@@ -6,6 +6,7 @@ from .scene_marker_listing import SceneMarkerListing
 
 
 def create_listing(_type: str, client: StashInterface) -> Listing:
+    """Creates either a SceneListing or SceneMarkerListing"""
     if _type == "scene_markers":
         return SceneMarkerListing(client)
     return SceneListing(client)
