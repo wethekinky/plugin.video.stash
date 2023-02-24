@@ -30,11 +30,7 @@ Aliases: {', '.join(performer['alias_list'])}
 {performer['details']}
 """
             item = self._create_item(
-                title=name,
-                description=details,
-                image_path=performer["image_path"]
-                if performer.get("image_count", 0) > 0
-                else "",
+                title=name, description=details, image_path=performer["image_path"]
             )
             url = self._create_url(name, criterion)
             items.append((url, item, True))

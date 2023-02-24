@@ -207,7 +207,6 @@ query findPerformers($performer_filter: PerformerFilterType, $filter: FindFilter
       gender
       favorite
       image_path
-      image_count
     }
   }
 }
@@ -277,7 +276,6 @@ query findStudios($studio_filter: StudioFilterType, $filter: FindFilterType!) {
       id
       name
       image_path
-      image_count
       details
     }
   }
